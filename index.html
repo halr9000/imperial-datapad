@@ -22,10 +22,19 @@
                 <span class="btn-icon">📁</span>
                 IMPORT DATA
             </button>
+            <button id="pasteBtn" class="control-btn">
+                <span class="btn-icon">📋</span>
+                PASTE MARKDOWN
+            </button>
             <button id="clearBtn" class="control-btn secondary">
                 <span class="btn-icon">🗑</span>
                 CLEAR
             </button>
+        </div>
+        
+        <div id="paste-area" class="paste-area" style="display: none;">
+            <textarea id="markdown-input" placeholder="Paste your markdown here..."></textarea>
+            <button id="submitMarkdownBtn" class="control-btn">Submit</button>
         </div>
         
         <div class="display-area">

@@ -12,12 +12,18 @@ class ImperialDatapad {
         this.fileInput = document.getElementById('fileInput');
         this.content = document.getElementById('content');
         this.timestamp = document.getElementById('timestamp');
+        this.pasteBtn = document.getElementById('pasteBtn');
+        this.pasteArea = document.getElementById('paste-area');
+        this.markdownInput = document.getElementById('markdown-input');
+        this.submitMarkdownBtn = document.getElementById('submitMarkdownBtn');
     }
 
     setupEventListeners() {
         this.importBtn.addEventListener('click', () => this.triggerFileImport());
         this.clearBtn.addEventListener('click', () => this.clearContent());
         this.fileInput.addEventListener('change', (e) => this.handleFileImport(e));
+        this.pasteBtn.addEventListener('click', () => this.togglePasteArea());
+        this.submitMarkdownBtn.addEventListener('click', () => this.handleMarkdownSubmit());
     }
 
     startClock() {
@@ -36,11 +42,31 @@ class ImperialDatapad {
         this.timestamp.textContent = `TIME: ${timeString}`;
     }
 
+    togglePasteArea() {
+        const isVisible = this.pasteArea.style.display !== 'none';
+        this.pasteArea.style.display = isVisible ? 'none' : 'block';
+    }
+
+    handleMarkdownSubmit() {
+        const markdownText = this.markdownInput.value;
+        if (markdownText.trim()) {
+            this.displayContent(markdownText, 'Pasted Content.md');
+            this.markdownInput.value = ''; // Clear the textarea
+            this.togglePasteArea(); // Hide the paste area
+        }
+    }
+
     initializeTerminal() {
         // Add some terminal-like startup effects
-        setTimeout(() => {
-            this.typeText("IMPERIAL DATAPAD INITIALIZED...", 50);
-        }, 500);
+        const welcomeMessage = this.content.querySelector('.welcome-message');
+        if (welcomeMessage) {
+            const startupText = document.createElement('p');
+            startupText.className = 'startup-text';
+            welcomeMessage.appendChild(startupText);
+            setTimeout(() => {
+                this.typeText(startupText, "IMPERIAL DATAPAD INITIALIZED...", 50);
+            }, 500);
+        }
     }
 
     triggerFileImport() {
@@ -168,12 +194,13 @@ class ImperialDatapad {
         this.fileInput.value = '';
     }
 
-    typeText(text, speed = 100) {
+    typeText(element, text, speed = 50) {
         // Typing effect for terminal-like experience
         let i = 0;
+        element.textContent = ''; // Clear the element first
         const typeInterval = setInterval(() => {
             if (i < text.length) {
-                process.stdout?.write?.(text.charAt(i));
+                element.textContent += text.charAt(i);
                 i++;
             } else {
                 clearInterval(typeInterval);
